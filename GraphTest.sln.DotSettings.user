@@ -1,0 +1,9 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=_002FUsers_002Fkanapo_002FDocuments_002FUnity_002FGraphConnectEngine_002FGraphConnectEngine_002Esln/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=_002FUsers_002Fkanapo_002FDocuments_002FUnity_002FGraphConnectEngine_002FGraphConnectEngine_002Fbin_002FDebug_002FGraphConnectEngine_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=8b97ff5e_002Daa5d_002D4e08_002Dbc41_002D5f38fe8379de/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Test1" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
+  &lt;TestAncestor&gt;
+    &lt;TestId&gt;xUnit::87B70293-C5BA-4643-A45F-E39DFFD5A560::net5.0::GraphTest.UnitTest1.Test1&lt;/TestId&gt;
+    &lt;TestId&gt;xUnit::87B70293-C5BA-4643-A45F-E39DFFD5A560::net5.0::GraphTest.UnitTest1.Test2&lt;/TestId&gt;
+  &lt;/TestAncestor&gt;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
