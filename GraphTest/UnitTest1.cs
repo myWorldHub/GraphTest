@@ -82,10 +82,12 @@ namespace GraphTest
                 SetVariableGraph setVariableGraph = new SetVariableGraph(connector, holder);
                 setVariableGraph.VariableName = variableName;
 
+                int a = 0;
                 DebugTextGraph textGraph = new DebugTextGraph(connector, msg =>
                 {
-                    _testOutputHelper.WriteLine(msg + " : " + count);
-                    Assert.Equal(count.ToString(), msg);
+                    _testOutputHelper.WriteLine("Assert : " + msg + " : " + a);
+                    Assert.Equal(a.ToString(), msg);
+                    a++;
                 });
 
                 GetVariableGraph getVariableGraph2 = new GetVariableGraph(connector, holder);
