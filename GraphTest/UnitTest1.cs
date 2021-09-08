@@ -20,36 +20,39 @@ namespace GraphTest
         [Fact]
         public void Test1()
         {
-            int count = 0;
-
-            NodeConnector connector = new NodeConnector();
-
-            UpdaterGraph updater = new UpdaterGraph(connector);
-            updater.IntervalType = UpdaterGraph.Type.Update;
-
-            IntGraph intGraph = new IntGraph(connector);
-
-            DebugTextGraph textGraph = new DebugTextGraph(connector, msg =>
+            for (int i = 0; i < 100; i++)
             {
-                var result = msg == intGraph.Number.ToString();
-                _testOutputHelper.WriteLine($"{msg} : {count} : {intGraph.Number} : {result}");
-                Assert.True(result);
-            });
+                int count = 0;
 
-            //connect
-            Assert.True(connector.ConnectNode(updater.OutProcessNode, textGraph.InProcessNode));
-            Assert.True(connector.ConnectNode(intGraph.OutItemNode, textGraph.InItemNode));
+                NodeConnector connector = new NodeConnector();
 
-            //Assert
-            for (; count < 10; count++)
-            {
-                updater.Update(0);
-                intGraph.Number++;
+                UpdaterGraph updater = new UpdaterGraph(connector);
+                updater.IntervalType = UpdaterGraph.Type.Update;
+
+                IntGraph intGraph = new IntGraph(connector);
+
+                DebugTextGraph textGraph = new DebugTextGraph(connector, msg =>
+                {
+                    var result = msg == intGraph.Number.ToString();
+                    _testOutputHelper.WriteLine($"{msg} : {count} : {intGraph.Number} : {result}");
+                    Assert.True(result);
+                });
+
+                //connect
+                Assert.True(connector.ConnectNode(updater.OutProcessNode, textGraph.InProcessNode));
+                Assert.True(connector.ConnectNode(intGraph.OutItemNode, textGraph.InItemNode));
+
+                //Assert
+                for (; count < 100; count++)
+                {
+                    updater.Update(0);
+                    intGraph.Number++;
+                }
+
+                //disconnect
+                Assert.True(connector.DisconnectNode(updater.OutProcessNode, textGraph.InProcessNode));
+                Assert.True(connector.DisconnectNode(intGraph.OutItemNode, textGraph.InItemNode));
             }
-
-            //disconnect
-            Assert.True(connector.DisconnectNode(updater.OutProcessNode, textGraph.InProcessNode));
-            Assert.True(connector.DisconnectNode(intGraph.OutItemNode, textGraph.InItemNode));
         }
 
         [Fact]
@@ -104,7 +107,7 @@ namespace GraphTest
                 Assert.True(connector.ConnectNode(getVariableGraph2.OutItemNode, textGraph.InItemNode));
 
                 //Assert
-                for (; count < 10; count++)
+                for (; count < 100; count++)
                 {
                     updater.Update(0);
                 }
