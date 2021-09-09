@@ -36,11 +36,12 @@ namespace GraphTest
                     var result = msg == intGraph.Number.ToString();
                     _testOutputHelper.WriteLine($"{msg} : {count} : {intGraph.Number} : {result}");
                     Assert.True(result);
+                    return true;
                 });
 
                 //connect
                 Assert.True(connector.ConnectNode(updater.OutProcessNode, textGraph.InProcessNode));
-                Assert.True(connector.ConnectNode(intGraph.OutItemNode, textGraph.InItemNode));
+                Assert.True(connector.ConnectNode(intGraph.GetOutItemNode(0), textGraph.GetInItemNode(0)));
 
                 //Assert
                 for (; count < 100; count++)
@@ -51,7 +52,7 @@ namespace GraphTest
 
                 //disconnect
                 Assert.True(connector.DisconnectNode(updater.OutProcessNode, textGraph.InProcessNode));
-                Assert.True(connector.DisconnectNode(intGraph.OutItemNode, textGraph.InItemNode));
+                Assert.True(connector.DisconnectNode(intGraph.GetOutItemNode(0), textGraph.GetInItemNode(0)));
             }
         }
 
@@ -91,6 +92,7 @@ namespace GraphTest
                     _testOutputHelper.WriteLine("Assert : " + msg + " : " + a);
                     Assert.Equal(a.ToString(), msg);
                     a++;
+                    return true;
                 });
 
                 GetVariableGraph getVariableGraph2 = new GetVariableGraph(connector, holder);
@@ -100,16 +102,55 @@ namespace GraphTest
                 Assert.True(connector.ConnectNode(updater.OutProcessNode, setVariableGraph.InProcessNode));
                 Assert.True(connector.ConnectNode(setVariableGraph.OutProcessNode, textGraph.InProcessNode));
 
-                Assert.True(connector.ConnectNode(addGraph.InItemNode1, intGraph.OutItemNode));
-                Assert.True(connector.ConnectNode(addGraph.InItemNode2, getVariableGraph1.OutItemNode));
-                Assert.True(connector.ConnectNode(addGraph.OutItemNode, setVariableGraph.InItemNode));
+                Assert.True(connector.ConnectNode(addGraph.GetInItemNode(0), intGraph.GetOutItemNode(0)));
+                Assert.True(connector.ConnectNode(addGraph.GetInItemNode(1), getVariableGraph1.GetOutItemNode(0)));
+                Assert.True(connector.ConnectNode(addGraph.GetOutItemNode(0), setVariableGraph.GetInItemNode(0)));
 
-                Assert.True(connector.ConnectNode(getVariableGraph2.OutItemNode, textGraph.InItemNode));
+                Assert.True(connector.ConnectNode(getVariableGraph2.GetOutItemNode(0), textGraph.GetInItemNode(0)));
 
                 //Assert
                 for (; count < 100; count++)
                 {
                     updater.Update(0);
+                }
+            }
+        }
+
+        [Fact]
+        public void Test3()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                _testOutputHelper.WriteLine("----------------------------" + i);
+                
+                int count = 0;
+                string variableName = "SampleInt";
+
+                NodeConnector connector = new NodeConnector();
+
+                UpdaterGraph updater = new UpdaterGraph(connector);
+                updater.IntervalType = UpdaterGraph.Type.Update;
+
+                IntGraph intGraph = new IntGraph(connector);
+                intGraph.Number = 1;
+                
+                DebugTextGraph textGraph = new DebugTextGraph(connector, msg =>
+                {
+                    _testOutputHelper.WriteLine("Assert : " + msg + " : "+ intGraph.Number);
+                    Assert.Equal(intGraph.Number.ToString(), msg);
+                    return true;
+                });
+
+
+                Assert.True(connector.ConnectNode(updater.OutProcessNode, intGraph.InProcessNode));
+                Assert.True(connector.ConnectNode(intGraph.OutProcessNode, textGraph.InProcessNode));
+                Assert.True(connector.ConnectNode(intGraph.GetOutItemNode(0), textGraph.GetInItemNode(0)));
+
+                //Assert
+                for (; count < 100; count++)
+                {
+                    updater.Update(0);
+                    intGraph.Number++;
                 }
             }
         }
