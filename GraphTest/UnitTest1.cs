@@ -11,6 +11,7 @@ using Xunit.Abstractions;
 
 namespace GraphTest
 {
+    //TODO そもそもDebugTextが実行されるかの確認
     public class UnitTest1
     {
         private readonly ITestOutputHelper _testOutputHelper;
@@ -312,7 +313,6 @@ namespace GraphTest
                 for (int j = 0; j < 10; j++)
                 {
                     updater.Update(0);
-                    Assert.True(false);
                 }
             }
         }
