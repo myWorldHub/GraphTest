@@ -1,6 +1,6 @@
 using GraphConnectEngine.Core;
 using GraphConnectEngine.Graph;
-using GraphConnectEngine.Graph.BuildIn;
+using GraphConnectEngine.Graph.Builtin;
 using GraphConnectEngine.Graph.Event;
 using GraphConnectEngine.Graph.Operator;
 using GraphConnectEngine.Graph.Statement;
@@ -8,7 +8,6 @@ using GraphConnectEngine.Graph.Variable;
 using GraphConnectEngine.Node;
 using Xunit;
 using Xunit.Abstractions;
-
 namespace GraphTest
 {
     //TODO そもそもDebugTextが実行されるかの確認
