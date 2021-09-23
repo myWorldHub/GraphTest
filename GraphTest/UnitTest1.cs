@@ -85,13 +85,13 @@ namespace GraphTest
                 NodeConnector connector = new NodeConnector();
 
                 VariableHolder holder = new VariableHolder();
-                Assert.True(holder.TryCreateItem(variableName, -1));
-                Assert.False(holder.TryCreateItem(variableName, -1));
+                Assert.True(holder.TryCreateItem(variableName, 0));
+                Assert.False(holder.TryCreateItem(variableName, 0));
 
                 UpdaterGraph updater = new UpdaterGraph(connector);
                 updater.IntervalType = UpdaterGraph.Type.Update;
 
-                ValueGraph<int>  intGraph = new ValueGraph<int>(connector,1);
+                ValueGraph<int> intGraph = new ValueGraph<int>(connector,1);
 
                 AdditionOperatorGraph addGraph = new AdditionOperatorGraph(connector);
 
@@ -119,7 +119,7 @@ namespace GraphTest
 
                 Assert.True(connector.ConnectNode(addGraph.InItemNodes[0], intGraph.OutItemNodes[0]));
                 Assert.True(connector.ConnectNode(addGraph.InItemNodes[1], getVariableGraph1.OutItemNodes[0]));
-                Assert.True(connector.ConnectNode(addGraph.OutItemNodes[0], setVariableGraph.InItemNodes[0]));
+                Assert.True(connector.ConnectNode(addGraph.OutItemNodes[2], setVariableGraph.InItemNodes[0]));
 
                 Assert.True(connector.ConnectNode(getVariableGraph2.OutItemNodes[0], textGraph.InItemNodes[0]));
 
