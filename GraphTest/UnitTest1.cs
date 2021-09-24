@@ -1,4 +1,4 @@
-using System;
+
 using GraphConnectEngine.Core;
 using GraphConnectEngine.Graph;
 using GraphConnectEngine.Graph.Value;
@@ -313,6 +313,29 @@ namespace GraphTest
                     updater.Update(0);
                 }
             }
+        }
+
+
+        [Fact]
+        public void CastGrap_GeneralTest()
+        {
+            var conn = new NodeConnector();
+
+            var updater = new UpdaterGraph(conn);
+            var cast = new CastGraph<int>(conn);
+            var fv = new ValueGraph<float>(conn, 1.1f);
+            var text = new DebugTextGraph(conn, str =>
+            {
+                _testOutputHelper.WriteLine($"ASSERT : 1 : {str} : {fv.Value}");
+                Assert.Equal("1", str);
+                return true;
+            });
+
+            Assert.True(conn.ConnectNode(updater.OutProcessNode, text.InProcessNode));
+            Assert.True(conn.ConnectNode(fv.OutItemNodes[0], cast.InItemNodes[0]));
+            Assert.True(conn.ConnectNode(cast.OutItemNodes[0], text.InItemNodes[0]));
+
+            updater.Update(0);
         }
     }
 }
