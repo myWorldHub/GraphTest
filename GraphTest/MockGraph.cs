@@ -4,6 +4,7 @@ using GraphConnectEngine.Node;
 
 namespace GraphTest
 {
+    /*
     public class MockGraph : GraphBase
     {
         public MockGraph(NodeConnector connector) : base(connector)
@@ -22,4 +23,5 @@ namespace GraphTest
             return "MockGraph";
         }
     }
+    */
 }

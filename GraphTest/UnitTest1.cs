@@ -1,4 +1,5 @@
 
+using System.Threading.Tasks;
 using GraphConnectEngine.Core;
 using GraphConnectEngine.Graph;
 using GraphConnectEngine.Graph.Value;
@@ -30,7 +31,7 @@ namespace GraphTest
         ///     int =>
         /// </summary>
         [Fact]
-        public void Test1()
+        public async void Test1()
         {
             for (int i = 0; i < 100; i++)
             {
@@ -45,12 +46,12 @@ namespace GraphTest
 
                 ValueGraph<int> intGraph = new ValueGraph<int>(connector,0);
 
-                DebugTextGraph textGraph = new DebugTextGraph(connector, msg =>
+                DebugTextGraph textGraph = new DebugTextGraph(connector,  msg =>
                 {
                     var result = msg == intGraph.Value.ToString();
                     _testOutputHelper.WriteLine($"{msg} : {count} : {intGraph.Value} : {result}");
                     Assert.True(result);
-                    return true;
+                    return Task.FromResult(true);
                 });
 
                 //connect
@@ -60,7 +61,7 @@ namespace GraphTest
                 //Assert
                 for (; count < 100; count++)
                 {
-                    updater.Update(0);
+                    await updater.Update(0);
                     intGraph.Value++;
                 }
             }
@@ -73,7 +74,7 @@ namespace GraphTest
         /// int           get =>
         /// </summary>
         [Fact]
-        public void Test2()
+        public async void Test2()
         {
             for (int i = 0; i < 100; i++)
             {
@@ -85,8 +86,8 @@ namespace GraphTest
                 NodeConnector connector = new NodeConnector();
 
                 VariableHolder holder = new VariableHolder();
-                Assert.True(holder.TryCreateItem(variableName, 0));
-                Assert.False(holder.TryCreateItem(variableName, 0));
+                Assert.True(await holder.TryCreate(variableName, 0));
+                Assert.False(await holder.TryCreate(variableName, 0));
 
                 UpdaterGraph updater = new UpdaterGraph(connector);
                 updater.IntervalType = UpdaterGraph.Type.Update;
@@ -107,7 +108,7 @@ namespace GraphTest
                     _testOutputHelper.WriteLine("Assert : " + msg + " : " + a);
                     Assert.Equal(a.ToString(), msg);
                     a++;
-                    return true;
+                    return Task.FromResult(true);
                 });
 
                 GetVariableGraph getVariableGraph2 = new GetVariableGraph(connector, holder);
@@ -126,7 +127,7 @@ namespace GraphTest
                 //Assert
                 for (; count < 100; count++)
                 {
-                    updater.Update(0);
+                    await updater.Update(0);
                 }
             }
         }
@@ -136,7 +137,7 @@ namespace GraphTest
         /// updater => int => text
         /// </summary>
         [Fact]
-        public void Test3()
+        public async void Test3()
         {
             for (int i = 0; i < 100; i++)
             {
@@ -155,7 +156,7 @@ namespace GraphTest
                 {
                     _testOutputHelper.WriteLine("Assert : " + msg + " : "+ intGraph.Value);
                     Assert.Equal(intGraph.Value.ToString(), msg);
-                    return true;
+                    return Task.FromResult(true);
                 });
 
 
@@ -166,7 +167,7 @@ namespace GraphTest
                 //Assert
                 for (; count < 100; count++)
                 {
-                    updater.Update(0);
+                    await updater.Update(0);
                     intGraph.Value++;
                 }
             }
@@ -178,7 +179,7 @@ namespace GraphTest
         /// アイテムのストリームと、equalグラフのテスト
         /// </summary>
         [Fact]
-        public void Test4()
+        public async void Test4()
         {
             for (int i = 0; i < 100; i++)
             {
@@ -197,7 +198,7 @@ namespace GraphTest
                 {
                     _testOutputHelper.WriteLine("Assert : " + msg);
                     Assert.Equal("True", msg);
-                    return true;
+                    return Task.FromResult(true);
                 });
 
                 Assert.True(connector.ConnectNode(updater.OutProcessNode, equal.InProcessNode));
@@ -210,7 +211,7 @@ namespace GraphTest
 
                 for (int j = 0; j < 10; j++)
                 {
-                    updater.Update(0);
+                    await updater.Update(0);
                 }
             }
         }
@@ -222,7 +223,7 @@ namespace GraphTest
         /// text => equalの確認
         /// </summary>
         [Fact]
-        public void Test5()
+        public async void Test5()
         {
             for (int i = 0; i < 100; i++)
             {
@@ -241,7 +242,7 @@ namespace GraphTest
                 {
                     _testOutputHelper.WriteLine("Assert : " + msg);
                     Assert.Equal("True", msg);
-                    return true;
+                    return Task.FromResult(true);
                 });
 
                 Assert.True(connector.ConnectNode(updater.OutProcessNode, text.InProcessNode));
@@ -253,7 +254,7 @@ namespace GraphTest
 
                 for (int j = 0; j < 10; j++)
                 {
-                    updater.Update(0);
+                    await updater.Update(0);
                 }
             }
         }
@@ -264,7 +265,7 @@ namespace GraphTest
         /// int=>equal=>
         /// </summary>
         [Fact]
-        public void Test6()
+        public async void Test6()
         {
             for (int i = 0; i < 100; i++)
             {
@@ -286,14 +287,14 @@ namespace GraphTest
                 {
                     _testOutputHelper.WriteLine("Assert : " + msg);
                     Assert.Equal("True", msg);
-                    return true;
+                    return Task.FromResult(true);
                 });
 
                 DebugTextGraph text2 = new DebugTextGraph(connector, msg =>
                 {
                     _testOutputHelper.WriteLine("Assert : " + msg);
                     Assert.Equal("False", msg);
-                    return true;
+                    return Task.FromResult(true);
                 });
 
                 Assert.True(connector.ConnectNode(updater.OutProcessNode, ifGraph.InProcessNode));
@@ -310,14 +311,22 @@ namespace GraphTest
 
                 for (int j = 0; j < 10; j++)
                 {
-                    updater.Update(0);
+                    await updater.Update(0);
+                    if (i % 2 == 0)
+                    {
+                        intGraph1.Value++;
+                    }
+                    else
+                    {
+                        intGraph2.Value = intGraph1.Value;
+                    }
                 }
             }
         }
 
 
         [Fact]
-        public void CastGrap_GeneralTest()
+        public async void CastGraph_GeneralTest()
         {
             var conn = new NodeConnector();
 
@@ -328,14 +337,15 @@ namespace GraphTest
             {
                 _testOutputHelper.WriteLine($"ASSERT : 1 : {str} : {fv.Value}");
                 Assert.Equal("1", str);
-                return true;
+                return Task.FromResult(true);
             });
 
             Assert.True(conn.ConnectNode(updater.OutProcessNode, text.InProcessNode));
             Assert.True(conn.ConnectNode(fv.OutItemNodes[0], cast.InItemNodes[0]));
             Assert.True(conn.ConnectNode(cast.OutItemNodes[0], text.InItemNodes[0]));
 
-            updater.Update(0);
+            await updater.Update(0);
         }
+        
     }
 }

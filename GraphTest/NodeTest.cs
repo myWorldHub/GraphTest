@@ -5,6 +5,7 @@ namespace GraphTest
 {
     public class NodeTest
     {
+        /*
         /// <summary>
         /// ProcessNodeの接続テスト
         /// </summary>
@@ -63,5 +64,6 @@ namespace GraphTest
             
             //TODO Itemとつなげないことを確認 void & int
         }
+        */
     }
 }
