@@ -122,15 +122,10 @@ namespace GraphTest
                 Assert.True(connector.ConnectNode(getVariableGraph2.OutItemNodes[0], textGraph.InItemNodes[0]));
 
                 //Assert
-                Task[] tasks = new Task[100];
                 for (int j = 0; j < 100; j++)
-                {
-                    tasks[j] =  updater.Update(0);
+                { 
+                    await updater.Update(0);
                 }
-
-                _testOutputHelper.WriteLine("Waitする : " + DateTime.Now.Millisecond);
-                Task.WaitAll(tasks);
-                _testOutputHelper.WriteLine("Waitした : " + DateTime.Now.Millisecond);
                 
             }
         }
@@ -346,7 +341,6 @@ namespace GraphTest
 
             await updater.Update(0);
         }
-        
-    
+
     }
 }
