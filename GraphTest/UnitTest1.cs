@@ -23,7 +23,7 @@ namespace GraphTest
             _testOutputHelper = testOutputHelper;
             
             Logger.LogLevel = 0;
-            //Logger.SetLogMethod(_testOutputHelper.WriteLine);
+            Logger.SetLogMethod(_testOutputHelper.WriteLine);
         }
 
         /// <summary>
@@ -342,5 +342,42 @@ namespace GraphTest
             await updater.Update(0);
         }
 
+
+        [Fact]
+        public async Task DelayGraph_GeneralTest()
+        {
+            var conn = new NodeConnector();
+
+            UpdaterGraph updater = new UpdaterGraph(conn, new ProcessSender());
+            
+            var delay = new DelayGraph(conn);
+            
+            var fv = new ValueGraph<int>(conn, 5);
+            
+            var text = new DebugTextGraph(conn, str =>
+            {
+                _testOutputHelper.WriteLine($"ASSERT : 5 : {str} : {fv.Value}");
+                Assert.Equal("5", str);
+                return Task.FromResult(true);
+            });
+
+            Assert.True(conn.ConnectNode(updater.OutProcessNode, delay.InProcessNode));
+            Assert.True(conn.ConnectNode(delay.OutProcessNode, text.InProcessNode));
+            Assert.True(conn.ConnectNode(fv.OutItemNodes[0], delay.InItemNodes[0]));
+            Assert.True(conn.ConnectNode(delay.OutItemNodes[0], text.InItemNodes[0]));
+
+            double startTime = GetUnixTime();
+            await updater.Update(0);
+            double endTime = GetUnixTime();
+            
+            _testOutputHelper.WriteLine($"ExecTime : {startTime} => {endTime}");
+            Assert.True(endTime - startTime > 5000);
+        }
+
+
+        public static double GetUnixTime()
+        {
+            return DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds;
+        }
     }
 }
